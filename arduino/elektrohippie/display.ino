@@ -26,7 +26,7 @@ void setup_display()
 
 void drawMenu() {
 
-  drawHeader();
+  drawHeader("Hello!");
 
   drawGong();
  
@@ -54,44 +54,48 @@ void drawNote(int note,boolean onoff)
   
   switch(note)
   {
+
+//bass
    case 0:
-    tft.fillCircle(140, 160, 10, color);
-   break; 
- 
+    tft.fillCircle(160, 112, 10, color);
+   break;
+    
+//bass #2 (ring)
    case 1:
-    tft.fillCircle(110, 130, 10, color);
-   break; 
-
-   case 2:
-    tft.fillCircle(110, 90, 10, color);
-   break;    
-
-   case 3:
-    tft.fillCircle(140, 64, 10, color);
-   break; 
-   
-   case 4:
-    tft.fillCircle(182, 64, 10, color);
-   break;   
-   
-   case 5:
-    tft.fillCircle(210, 90, 10, color);
-   break;   
-
-   case 6:
-    tft.fillCircle(210, 130, 10, color);
-   break; 
-
-   case 7:
-    tft.fillCircle(182, 160, 10, color);
-   break; 
-
-   case 8:
     tft.fillCircle(160, 112, 20, color);
    break; 
 
+ // uhrzeigersinn ab vorne links  
+   case 2:
+    tft.fillCircle(140, 160, 10, color);
+   break; 
+
+   case 4:
+    tft.fillCircle(110, 130, 10, color);
+   break; 
+
+   case 6:
+    tft.fillCircle(110, 90, 10, color);
+   break;   
+   
+   case 8:
+    tft.fillCircle(140, 64, 10, color);
+   break; 
+
    case 9:
-    tft.fillCircle(160, 112, 10, color);
+    tft.fillCircle(182, 64, 10, color);
+   break;   
+
+   case 7:
+    tft.fillCircle(210, 90, 10, color);
+   break; 
+
+   case 5:
+    tft.fillCircle(210, 130, 10, color);
+   break; 
+
+   case 3:
+    tft.fillCircle(182, 160, 10, color);
    break; 
    
   }
@@ -100,12 +104,17 @@ void drawNote(int note,boolean onoff)
 }
 
 
-void drawHeader()
+void drawHeader(String text)
 {
+
+// first dark
+tft.fillRect(0, 0, 400, 40, ILI9341_BLACK);
+
+  
 tft.setTextSize(3);
 tft.setTextColor(ILI9341_WHITE);
 tft.setCursor(10, 5);
-  tft.println("ELEKTROHIPPIE 0.9");
+tft.println(text);
   
 }
 

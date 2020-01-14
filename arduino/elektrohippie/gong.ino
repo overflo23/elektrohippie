@@ -1,10 +1,8 @@
 
-// how long to tune a tone
-// might migrtea to array vor individual lengths on each tone..
-//int tone_on = 10; 
 
+// how long each tone is triggered
 int tone_on[10] = {
- 20,
+ 50,
  50,
  50,
  50,
@@ -17,20 +15,30 @@ int tone_on[10] = {
 };
 
 
-int notes[10] = {
- note1,
- note2,
- note3,
- note4,
- note5,
- note6,
- note7,
- note8,
- note9,
- note10
+
+
+//CDEFGAH 
+int notes[10] = {         // MIDI  
+ note10, // A2 444 hz     // 38
+ note9,  // D2 ?          // 45 
+                         //laut sonsti
+ note1, //D3 / A3  //0   A3  57
+ note8, //C4       //7   C4  60
+ note2, //D4       //1   D4  62
+ note7, //E4       //6   E4  64
+ note3, //F4       //2   F4  65
+ note6, //G4       //5   G4  67
+ note4, //A4       //3   A4  69
+ note5, //C5       //4   C5  72
 };
 
 
+
+
+
+
+
+// contains WHEN a note i striggered millis()
 uint32_t playnotes[10] = {0,0,0,0,0,0,0,0,0,0};
 
 
@@ -53,14 +61,27 @@ pinMode(note10, OUTPUT);
 
 void handle_gong()
 {
-  // cycle trough sound array of al 10 notes decrement playconuter, foinally set to 0 afet 100ms
+  // cycle trough sound array of al 10 notes decrement playcounter, finally set to 0 after 100ms
   // fianlly pull pin low
   for(int i=0;i<10;i++)
   {
    uint32_t onsince =  playnotes[i];
-   if((onsince>0) && (millis()-onsince) > tone_on[i])
-   {
+
+
+  // went from 50 to 20 ms for testing 
+    if((onsince>0) && (millis()-onsince) > tone_on[i])
+  //if((onsince>0) && (millis()-onsince) > 20)
+  {
     note_off(i);    
+
+
+     // integrated in note_off
+    //reset note 
+   // if((millis()-onsince+100) > tone_on[i])
+   // { 
+   //   
+   // }
+    
    }
    
   }
@@ -70,7 +91,6 @@ void handle_gong()
 
 
 
-// pin duration (10-100)  pwm (0-256)
 void gong(int note)
 {
   Serial.print("GONG: ");
@@ -83,18 +103,23 @@ void gong(int note)
 
 
 
+
 void gong_init()
 {
+  // von tief nach hoch
 
-for(int i=0;i<10;i++)
-{
- note_on(i);
- b_delay(300);
- if(!gong_running) return;
+ for(int i =0;i<10;i++)
+ { 
+  note_on(i);
+  b_delay(200);
+  if(!gong_running) return;
+ }
+ 
+   b_delay(1000);
+ 
+
 }
 
-
-}
 
 
 
@@ -113,9 +138,8 @@ void note_off(int note)
 {
   Serial.print("OFF: ");
   Serial.println(note);
-  
+ playnotes[note] = 0; 
  drawNote(note, false); 
- playnotes[note] = 0;
  digitalWrite(notes[note],LOW);
 }
 

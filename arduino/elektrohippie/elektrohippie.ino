@@ -47,6 +47,12 @@ setup_sdcard();
 int counter=0;
 
 
+// where in the menu are we?
+int menustate=0;
+int submenustate=0;
+
+
+
 boolean gong_running = false;
 
 void loop() {
@@ -54,7 +60,8 @@ void loop() {
   handle_buttons();
   handle_midi();
   handle_gong();
- // handle_sdcard();
+  
+  handle_sdcard();
 
   if(gong_running)  gong_init();
 

@@ -45,7 +45,6 @@ void handle_buttons()
 
 
 
-
 void b1click()
 {
   button_down=true;
@@ -61,10 +60,23 @@ void b1clickstop()
 
 void b2click()
 {
-  button_down=true;
+  //button_down=true;
   Serial.println("button2 click");
   drawEnter(true);
+
+  if(gong_running)
+  {
+   drawHeader("Aus."); 
+  }
+
+  else
+  {
+   drawHeader("Yippie!");
+    
+  }
   gong_running = !gong_running;
+  delay(100);
+
 }
 
 void b2clickstop()

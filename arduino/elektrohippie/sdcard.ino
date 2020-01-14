@@ -1,24 +1,85 @@
+//i use the midifilestream lib from the "glockenspiel" project found on github:wq
+
 #include <MidiFileStream.h>
+
 #include <SD.h>
-
-
-/*
- * Based on Example code by
- * Bradford Needham (@bneedhamia, https://www.needhamia.com )
- * found here: https://github.com/bneedhamia/midifilestream
- */
-
+//#include <SPI.h>
 
 const int pinSelectSD = BUILTIN_SDCARD ; // Sparkfun SD shield Chip Select pin.
 
 
-char fName[] = "x.mid"; // The SD card Midi file to read.
+char fName[] = ""; // The SD card Midi file to read.
 
 boolean errorOccurred;  // if true, there's a problem.
 boolean isFinished;     // if true, we successfully finished reading the file.
 
 MidiFileStream midiFile; // the current Midi file being read.
-File file;               // the underlying SD card file.
+File file;
+
+int nSongs=0;
+String *songList;
+
+
+
+// add all .mid files in /PLAY folder to  songList[] Array
+void listSongs()
+{
+
+  File folder = SD.open("/PLAY");
+
+  
+  nSongs = 0;
+
+  while(true){
+    File entry = folder.openNextFile();
+    if(!entry){
+      folder.rewindDirectory();
+      break;
+    }
+    else
+    {
+//      Serial.println(entry.name());
+      if(entry.name()[0] !='_')
+      {
+       nSongs++;
+      }
+    }   
+    entry.close();
+  }
+
+  Serial.print("Songs found:");
+  Serial.println(nSongs);
+
+  songList = new String[nSongs];
+
+  int count=0;
+  while(true)
+  {
+    File entry = folder.openNextFile();
+    if(!entry){
+      folder.rewindDirectory();
+      break;
+    }
+    else
+    {
+
+      if(entry.name()[0] !='_')
+      {     
+       songList[count] = entry.name();
+       count++;
+      Serial.println(entry.name());
+      }
+    }   
+    entry.close();
+  }
+
+  
+}
+
+
+
+
+
 
 void setup_sdcard() {
 
@@ -40,17 +101,28 @@ void setup_sdcard() {
     return;
   }
   Serial.println("...succeeded.");
+
+
+
+  listSongs();
+  playFile(0);
+  
+}
+
+
+void playFile(int index)
+{
   
   // Open the file to read
-  
-  file = SD.open(fName, FILE_READ);
+
+  file = SD.open("/PLAY/NEWNOTES.MID", FILE_READ);
   if (!file) {
     Serial.print("Failed to open SD card file ");
     Serial.println(fName);
     Serial.println("Does that file exist?");
     return;
   }
-  
+
   /*
    * Read the Midi header from that file
    * and prepare to read Midi events from that file.
@@ -97,7 +169,6 @@ void setup_sdcard() {
 
 void handle_sdcard() {
 
-  
   // If we're finished reading, do nothing.
   if (isFinished) {
     Serial.println("FINISHED");
@@ -155,7 +226,7 @@ void handle_sdcard() {
   {
     Serial.print("delay ");
     Serial.println(del);
-    b_delay(del);
+    b_delay(del);  
   }
 
 
@@ -186,9 +257,5 @@ void handle_sdcard() {
     return;
   }
   
-  // Otherwise, it's an event we don't care about.
-  // Ignore it.
-  
-  // return;
 
 }
