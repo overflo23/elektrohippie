@@ -47,9 +47,16 @@ void handle_buttons()
 
 void b1click()
 {
-  button_down=true;
+//  button_down=true;
   Serial.println("button1 click");
   drawLeft(true);
+
+  file_index--;
+  if(file_index<0)
+   file_index=(nSongs-1);
+  resetPlayback(); 
+    delay(100);
+  
 }
 
 void b1clickstop()
@@ -58,12 +65,17 @@ void b1clickstop()
   drawLeft(false);
 }
 
+
+
+
+
 void b2click()
 {
   //button_down=true;
   Serial.println("button2 click");
-  drawEnter(true);
+//  drawEnter(true);
 
+/*
   if(gong_running)
   {
    drawHeader("Aus."); 
@@ -75,14 +87,29 @@ void b2click()
     
   }
   gong_running = !gong_running;
+ */
+
+
   delay(100);
+
 
 }
 
 void b2clickstop()
 {
   Serial.println("button2 click stop");
-  drawEnter(false);
+//  drawEnter(false);
+  if(playback)
+  {
+   playback =false;
+   drawMiddle("PLAY");
+  }
+  else
+  {
+   playback = true;
+   drawMiddle("STOP");   
+  } 
+  delay(100);
 }
 
 
@@ -91,9 +118,15 @@ void b2clickstop()
 
 void b3click()
 {
-  button_down=true;
+//  button_down=true;
   Serial.println("button3 click");
   drawRight(true);
+
+  file_index++;
+  if(file_index>nSongs-1)
+   file_index=0;
+  resetPlayback(); 
+    delay(100);
 }
 
 void b3clickstop()

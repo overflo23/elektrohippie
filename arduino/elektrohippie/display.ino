@@ -31,7 +31,8 @@ void drawMenu() {
   drawGong();
  
   drawLeft(false);
-  drawEnter(false);
+  //drawEnter(false);
+  drawMiddle("START");
   drawRight(false);  
 }
 
@@ -39,7 +40,7 @@ void drawMenu() {
 
 void drawGong()
 {
-      tft.drawCircle(160, 112, 70, ILI9341_MAGENTA);
+      tft.drawCircle(240, 112, 70, ILI9341_MAGENTA);
       for(int i=0;i<10;i++)
       {
        drawNote(i,false);
@@ -57,45 +58,45 @@ void drawNote(int note,boolean onoff)
 
 //bass
    case 0:
-    tft.fillCircle(160, 112, 10, color);
+    tft.fillCircle(240, 112, 10, color);
    break;
     
 //bass #2 (ring)
    case 1:
-    tft.fillCircle(160, 112, 20, color);
+    tft.fillCircle(240, 112, 20, color);
    break; 
 
  // uhrzeigersinn ab vorne links  
    case 2:
-    tft.fillCircle(140, 160, 10, color);
+    tft.fillCircle(220, 160, 10, color);
    break; 
 
    case 4:
-    tft.fillCircle(110, 130, 10, color);
+    tft.fillCircle(190, 130, 10, color);
    break; 
 
    case 6:
-    tft.fillCircle(110, 90, 10, color);
+    tft.fillCircle(190, 90, 10, color);
    break;   
    
    case 8:
-    tft.fillCircle(140, 64, 10, color);
+    tft.fillCircle(220, 64, 10, color);
    break; 
 
    case 9:
-    tft.fillCircle(182, 64, 10, color);
+    tft.fillCircle(262, 64, 10, color);
    break;   
 
    case 7:
-    tft.fillCircle(210, 90, 10, color);
+    tft.fillCircle(290, 90, 10, color);
    break; 
 
    case 5:
-    tft.fillCircle(210, 130, 10, color);
+    tft.fillCircle(290, 130, 10, color);
    break; 
 
    case 3:
-    tft.fillCircle(182, 160, 10, color);
+    tft.fillCircle(262, 160, 10, color);
    break; 
    
   }
@@ -111,7 +112,7 @@ void drawHeader(String text)
 tft.fillRect(0, 0, 400, 40, ILI9341_BLACK);
 
   
-tft.setTextSize(3);
+tft.setTextSize(2);
 tft.setTextColor(ILI9341_WHITE);
 tft.setCursor(10, 5);
 tft.println(text);
@@ -129,6 +130,24 @@ void drawLeft(boolean highlight)
 }
 
 
+
+
+
+void drawMiddle(String text)
+{
+
+ // first dark
+ tft.fillRect(100, 200, 130, 50, ILI9341_BLACK);
+
+
+ tft.setTextSize(3);
+ tft.setTextColor(ILI9341_GREEN);
+ tft.setCursor(125, 205);
+ tft.println(text);
+  
+}
+
+/*
 void drawEnter(boolean highlight)
 {
   tft.setTextSize(3);  
@@ -137,7 +156,7 @@ void drawEnter(boolean highlight)
   tft.setCursor(120, 205);
   tft.println("ENTER");
 }
-
+*/
 
 void drawRight(boolean highlight)
 {
@@ -146,4 +165,35 @@ void drawRight(boolean highlight)
   if(highlight)   tft.setTextColor(ILI9341_RED);
   tft.setCursor(270, 200);
   tft.println(">");
+}
+
+
+void display_songinfo()
+{
+// first dark
+tft.fillRect(0, 0, 160, 180, ILI9341_BLACK);
+
+  
+tft.setTextSize(2);
+tft.setTextColor(ILI9341_WHITE);
+tft.setCursor(10, 9);
+tft.println("Currently playing:");
+
+tft.setTextSize(2);
+tft.setTextColor(ILI9341_RED);
+tft.setCursor(10, 35);
+tft.println(songname);
+
+tft.setTextSize(2);
+tft.setTextColor(ILI9341_WHITE);
+tft.setCursor(10, 65);
+tft.println("Author:");
+
+
+tft.setTextSize(2);
+tft.setTextColor(ILI9341_RED);
+tft.setCursor(10, 90);
+tft.println(author);
+
+
 }

@@ -13,11 +13,10 @@ char fName[] = ""; // The SD card Midi file to read.
 boolean errorOccurred;  // if true, there's a problem.
 boolean isFinished;     // if true, we successfully finished reading the file.
 
+
 MidiFileStream midiFile; // the current Midi file being read.
 File file;
 
-int nSongs=0;
-String *songList;
 
 
 
@@ -38,7 +37,7 @@ void listSongs()
     }
     else
     {
-//      Serial.println(entry.name());
+      Serial.println(entry.name());
       if(entry.name()[0] !='_')
       {
        nSongs++;
@@ -105,9 +104,10 @@ void setup_sdcard() {
 
 
   listSongs();
-  playFile(0);
+  //playFile(0);
   
 }
+
 
 
 void playFile(int index)
@@ -115,7 +115,14 @@ void playFile(int index)
   
   // Open the file to read
 
-  file = SD.open("/PLAY/NEWNOTES.MID", FILE_READ);
+  Serial.println(songList[index]);
+  load_json_songinfo();
+  display_songinfo();
+//drawHeader(songList[index]);
+  
+  String play = "/PLAY/" + songList[index] +"/file.mid";
+//  file = SD.open("/PLAY/MMLN.MID", FILE_READ);
+  file = SD.open(play.c_str(), FILE_READ);
   if (!file) {
     Serial.print("Failed to open SD card file ");
     Serial.println(fName);
@@ -169,18 +176,23 @@ void playFile(int index)
 
 void handle_sdcard() {
 
+
+  // set from button #2
+  if(!playback) return;
+
   // If we're finished reading, do nothing.
   if (isFinished) {
     Serial.println("FINISHED");
     b_delay(1000);
+    resetPlayback();
     return;
   }
   
   // If there is a problem, just blink the LED.
   if (errorOccurred) {
 
-    Serial.println("ERROR");
-    delay(1000);
+   // Serial.println("ERROR");
+    b_delay(1000);
     
     return;
   }
@@ -224,9 +236,9 @@ void handle_sdcard() {
   int del = midiFile.getEventDeltaTicks();
   if(del)
   {
-    Serial.print("delay ");
-    Serial.println(del);
-    b_delay(del);  
+  //  Serial.print("delay ");
+  //  Serial.println(del);
+    b_delay(del*playback_speed);  
   }
 
 
@@ -242,10 +254,11 @@ void handle_sdcard() {
     char code = midiFile.getEventDataP()->channel.code;
     
     if (code == CH_NOTE_ON) {
-
-      myNoteOn(1,(int) midiFile.getEventDataP()->channel.param1,127);
-      Serial.print("SD PLAY ");
-      Serial.println(midiFile.getEventDataP()->channel.param1);
+      sd_note((int) midiFile.getEventDataP()->channel.param1);
+      
+   //   myNoteOn(1,(int) midiFile.getEventDataP()->channel.param1,127);
+  //    Serial.print("SD PLAY ");
+  //    Serial.println(midiFile.getEventDataP()->channel.param1);
       
       return;
     }
@@ -257,5 +270,48 @@ void handle_sdcard() {
     return;
   }
   
+
+}
+
+
+
+void resetPlayback()
+{
+
+ midiFile.end();
+ file.close(); 
+
+ errorOccurred = false;
+ isFinished=false;
+ 
+ //Serial.print("Now we play file:" );
+ //Serial.println(file_index);
+ playFile(file_index);
+
+}
+
+
+
+
+
+
+
+
+
+void sd_note(int note) {
+
+  Serial.print("SDCARD: ");
+  Serial.print(note, DEC);
+
+  if(tone_mapping[note] != -1)
+  {
+   Serial.println(" OK"); 
+    // note set
+   note_on(tone_mapping[note]);
+  }
+  else
+  {
+   Serial.println(" UNSET (FAILED)"); 
+  }
 
 }

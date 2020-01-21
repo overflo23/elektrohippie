@@ -1,7 +1,6 @@
 
 // is this a debug build? -> no actual triggers on solenoids
-#define DEBUG false
-
+#define DEBUG true
 int led=13;
 
 int button_down = false;
@@ -25,6 +24,18 @@ int note9 = 23;
 int note10 = 10;
 
 
+
+
+
+
+// sd card midi file read
+//factor delay*factor between notes. the higher the factor the slower the song..
+int playback_speed = 1;
+char songname[100];
+char author[100];
+
+
+
 void setup() {
   Serial.begin(115200);
 
@@ -44,16 +55,22 @@ setup_sdcard();
 }
 
 
+
+// for SDCARD
 int counter=0;
 
+// currently selected file
+int file_index=0;
+// total songs
+int nSongs=0;
+// list of fiels in /PLAY folder
+String *songList;
 
-// where in the menu are we?
-int menustate=0;
-int submenustate=0;
+
+boolean playback = false;
 
 
-
-boolean gong_running = false;
+//boolean gong_running = false;
 
 void loop() {
   // Add your MIDI application here...
@@ -63,7 +80,7 @@ void loop() {
   
   handle_sdcard();
 
-  if(gong_running)  gong_init();
+  //if(gong_running)  gong_init();
 
 
 }

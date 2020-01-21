@@ -93,8 +93,8 @@ void handle_gong()
 
 void gong(int note)
 {
-  Serial.print("GONG: ");
-  Serial.println(notes[note]);
+ // Serial.print("GONG: ");
+ // Serial.println(notes[note]);
   if(!DEBUG)    digitalWrite(notes[note],HIGH);
  // delay(duration);
  // analogWrite(pin,0);    
@@ -112,7 +112,7 @@ void gong_init()
  { 
   note_on(i);
   b_delay(200);
-  if(!gong_running) return;
+//  if(!gong_running) return;
  }
  
    b_delay(1000);
@@ -126,8 +126,8 @@ void gong_init()
 void note_on(int note)
 {
 
-  Serial.print("ON: ");
-  Serial.println(note);
+ // Serial.print("ON: ");
+ // Serial.println(note);
  drawNote(note, true); 
  playnotes[note] = millis();
  gong(note);
@@ -136,8 +136,8 @@ void note_on(int note)
 
 void note_off(int note)
 {
-  Serial.print("OFF: ");
-  Serial.println(note);
+ // Serial.print("OFF: ");
+ // Serial.println(note);
  playnotes[note] = 0; 
  drawNote(note, false); 
  digitalWrite(notes[note],LOW);
